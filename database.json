@@ -1,0 +1,18 @@
+{
+  "dev": {
+    "driver": "pg",
+    "user": "shopping_user",
+    "password": "password123",
+    "host": "127.0.0.1",
+    "database": "shopping",
+    "port": 5432
+  },
+  "test": {
+    "driver": "pg",
+    "user": "shopping_user",
+    "password": "password123",
+    "host": "127.0.0.1",
+    "database": "shopping_test",
+    "port": 5432
+  }
+}

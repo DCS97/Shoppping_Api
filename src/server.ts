@@ -1,15 +1,23 @@
-import express, { Request, Response } from 'express'
-import bodyParser from 'body-parser'
+import express, { Application, Request, Response } from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import { PORT, ADRESS } from './constants';
 
-const app: express.Application = express()
-const address: string = "0.0.0.0:3000"
+const app: Application = express();
 
-app.use(bodyParser.json())
+const corsOptions = {
+  optionsSuccessStatus: 200,
+};
 
-app.get('/', function (req: Request, res: Response) {
-    res.send('Hello World!')
-})
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
 
-app.listen(3000, function () {
-    console.log(`starting app on: ${address}`)
-})
+app.listen(PORT, (): void => {
+  console.log(`starting app on: ${ADRESS}`);
+});
+
+app.get('/', (req: Request, res: Response): void => {
+  res.status(200).send('Server is working!');
+});
+
+export default app;
