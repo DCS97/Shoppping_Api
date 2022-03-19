@@ -19,7 +19,8 @@ const create = async (req: Request, res: Response) => {
   try {
     const name = req.body.name;
     const category = req.body.category;
-    const price = req.body.price;
+    const price = Number(req.body.price);
+    const id = Number(req.body.id);
 
     if (name === undefined || price === undefined || category === undefined) {
       res.status(400);
@@ -29,11 +30,14 @@ const create = async (req: Request, res: Response) => {
       return false;
     }
 
-    const product: Product = await ProductStoreInstance.createProduct({
-      name,
-      price,
-      category,
-    });
+    const product: Product = await ProductStoreInstance.createProduct(
+      {
+        name,
+        price,
+        category,
+      },
+      id
+    );
 
     res.json(product);
   } catch (err) {
@@ -44,7 +48,7 @@ const create = async (req: Request, res: Response) => {
 
 const show = async (req: Request, res: Response) => {
   try {
-    const id = req.params.id;
+    const id = Number(req.params.id);
 
     if (id === undefined) {
       res.status(400);

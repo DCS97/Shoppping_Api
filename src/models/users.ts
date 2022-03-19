@@ -1,19 +1,14 @@
 import bcrypt from 'bcrypt';
 import client from '../database';
-import database from '../database';
-// import { generateToken } from '../../utils';
 
-
-export interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  password: string; 
-}
 export interface UserData {
   firstName: string;
   lastName: string;
+  userLogin: string;
   password: string;
+}
+export interface User extends UserData {
+  id: number;
 }
 
 export class UserStore {
@@ -26,12 +21,12 @@ export class UserStore {
       connection.release();
       return result.rows;
     } catch (err) {
-      throw new Error(`Cannot get all users. ERROR: ${err}`);
+      throw new Error(`Cannot get users. ERROR: ${err}`);
     }
   }
 
   // select user by id
-  async show(userId: string): Promise<User> {
+  async show(userId: number): Promise<User> {
     try {
       const connection = await client.connect();
       const sql = `SELECT * FROM users WHERE id = ($1)`;
@@ -47,27 +42,62 @@ export class UserStore {
   }
 
   // create a user
-  async createUser(user: UserData): Promise<User> {
+  async createUser(user: UserData, id?: number): Promise<User> {
+    const { userLogin, firstName, lastName, password } = user;
+    const user_id = id ? id : Math.floor(Math.random() * 100);
     try {
-      const { firstName, lastName, password } = user;
       const pepper: string = process.env.BCRYPT_PASSWORD as string;
       const salt: string = process.env.SALT_ROUNDS as string;
 
       const hashPassword: string = bcrypt.hashSync(
         password + pepper,
-        parseInt(salt)
+        parseInt(salt, 10)
       );
 
-      const connect = await client.connect();
-      const sql = `INSERT INTO users (firstName, lastName, password) VALUES($1, $2, $3) RETURNING *`;
-      const result = await connect.query(sql, [firstName, lastName, hashPassword]);
-      connect.release();
+      const connection = await client.connect();
+      const sql = `INSERT INTO users (id, userLogin, firstName, lastName, password) VALUES($1, $2, $3, $4, $5) RETURNING *`;
+      const result = await connection.query(sql, [
+        user_id,
+        userLogin,
+        firstName,
+        lastName,
+        hashPassword,
+      ]);
+      connection.release();
 
-      const id: number = result.rows[0].id;
-      //   const token: string = generateToken(id);
       return result.rows[0];
     } catch (err) {
       throw new Error(`Could not create user. ERROR: ${err}`);
+    }
+  }
+
+  async authenticate(
+    userLogin: string,
+    password: string
+  ): Promise<User | null> {
+    try {
+      const sql = 'SELECT * FROM users WHERE id=($1)';
+      const connection = await client.connect();
+      const result = await connection.query(sql, [userLogin]);
+
+      if (result.rows.length > 0) {
+        const user = result.rows[0];
+
+        if (
+          bcrypt.compareSync(
+            password + process.env.BCRYPT_PASSWORD,
+            user.password
+          )
+        ) {
+          return user;
+        }
+      }
+
+      connection.release();
+
+      return null;
+    } catch (err) {
+      throw new Error(`Could not find user ${userLogin}. ${err}`);
     }
   }
 }

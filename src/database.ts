@@ -12,7 +12,7 @@ const {
   POSTGRES_PASSWORD,
 } = process.env;
 
-let client;
+let client: Pool = new Pool();
 
 if (ENV === 'dev') {
   client = new Pool({

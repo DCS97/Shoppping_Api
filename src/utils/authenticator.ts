@@ -1,7 +1,7 @@
 import jwt, { Secret } from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 
-const SECRET = process.env.TOKEN_SECRET as Secret;
+const SECRET = process.env.JWT_SECRET as Secret;
 
 export function authenticator(
   req: Request,

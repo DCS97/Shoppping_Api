@@ -19,13 +19,13 @@ describe('Product Model', () => {
   it('should create a product using createProduct method', async () => {
     const result: Product = await product.createProduct({
       name: 'iPhone',
-      price: '645',
+      price: 645,
       category: 'phone',
     });
     expect(result).toEqual({
-      id: '1',
+      id: 1,
       name: 'iPhone',
-      price: '645',
+      price: 645,
       category: 'phone',
     });
   });
@@ -33,20 +33,20 @@ describe('Product Model', () => {
     const result: Product[] = await product.index();
     expect(result).toEqual([
       {
-        id: '1',
+        id: 1,
         name: 'iPhone',
-        price: '645',
+        price: 645,
         category: 'phone',
       },
     ]);
   });
 
   it('should return the correct product using show', async () => {
-    const result: Product = await product.show('1');
+    const result: Product = await product.show(1);
     expect(result).toEqual({
-      id: '1',
+      id: 1,
       name: 'iPhone',
-      price: '645',
+      price: 645,
       category: 'phone',
     });
   });
@@ -54,9 +54,9 @@ describe('Product Model', () => {
     const result: Product[] = await product.getProductByCategory('phone');
     expect(result).toEqual([
       {
-        id: '1',
+        id: 1,
         name: 'iPhone',
-        price: '645',
+        price: 645,
         category: 'phone',
       },
     ]);

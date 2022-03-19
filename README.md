@@ -4,7 +4,6 @@
 
 - add a `.env` file in the root directory and set the missing `#` environment parameters
 
-```
 PORT = 3000
 
 POSTGRES_DB = shopping
@@ -18,6 +17,7 @@ BCRYPT_PASSWORD=#
 SALT_ROUNDS=10
 TOKEN_TEST = #
 JWT_SECRET = #
+
 ## Set up
 
 - `docker-compose up` to start the docker container
