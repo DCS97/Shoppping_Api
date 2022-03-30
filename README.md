@@ -15,7 +15,6 @@ POSTGRES_PORT=5432
 
 BCRYPT_PASSWORD=#
 SALT_ROUNDS=10
-TOKEN_TEST = #
 JWT_SECRET = #
 
 ## Set up
@@ -48,7 +47,7 @@ JWT_SECRET = #
 "password": ###,
 "host": "127.0.0.1",
 "database": ###,
-"port": 5432
+"port": 5433
 }
 }
 
